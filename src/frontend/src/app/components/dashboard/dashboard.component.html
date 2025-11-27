@@ -1,0 +1,10 @@
+<div>
+  <h2>Dashboard</h2>
+  
+  <div *ngIf="user">
+    <p>Welcome, {{ user.firstName }} {{ user.lastName }}!</p>
+    <p>Email: {{ user.email }}</p>
+  </div>
+
+  <button (click)="logout()">Logout</button>
+</div>
