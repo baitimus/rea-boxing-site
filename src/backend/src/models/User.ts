@@ -3,9 +3,10 @@ import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   email: string;
-  password: string;
+  password?: string;
   firstName: string;
   lastName: string;
+  googleId?: string;
   createdAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
@@ -21,7 +22,7 @@ const userSchema = new Schema<IUser>({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
+    required: false,
     minlength: [6, 'Password must be at least 6 characters long']
   },
   firstName: {
@@ -34,6 +35,12 @@ const userSchema = new Schema<IUser>({
     required: [true, 'Last name is required'],
     trim: true
   },
+  googleId: {
+    type: String,
+    required: false,
+    unique: true,
+    sparse: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -42,7 +49,7 @@ const userSchema = new Schema<IUser>({
 
 // Hash password before saving
 userSchema.pre('save', async function() {
-  if (!this.isModified('password')) {
+  if (!this.isModified('password') || !this.password) {
     return;
   }
   
@@ -53,6 +60,9 @@ userSchema.pre('save', async function() {
 // Method to compare passwords
 userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
   try {
+    if (!this.password) {
+      return false;
+    }
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
     return false;

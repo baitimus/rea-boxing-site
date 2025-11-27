@@ -81,6 +81,13 @@ export class AuthService {
     return this.http.get<{ user: User }>(`${environment.apiUrl}/auth/profile`);
   }
 
+  googleSignIn(credential: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/google`, { credential })
+      .pipe(
+        tap(response => this.handleAuthSuccess(response))
+      );
+  }
+
   private handleAuthSuccess(response: AuthResponse): void {
     localStorage.setItem(this.TOKEN_KEY, response.token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));

@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Generate JWT token
 const generateToken = (userId: string): string => {
@@ -128,5 +131,81 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
   } catch (error: any) {
     console.error('Get profile error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Google Sign-In
+export const googleSignIn = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { credential } = req.body;
+    
+    if (!credential) {
+      res.status(400).json({ message: 'Google credential is required' });
+      return;
+    }
+
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    
+    if (!payload || !payload.email) {
+      res.status(400).json({ message: 'Invalid Google token' });
+      return;
+    }
+
+    const { sub: googleId, email, given_name: firstName, family_name: lastName, name } = payload;
+
+    // Check if user exists
+    let user = await User.findOne({ $or: [{ googleId }, { email }] });
+
+    if (user) {
+      // Update googleId if user exists but doesn't have it
+      if (!user.googleId) {
+        user.googleId = googleId;
+        await user.save();
+      }
+    } else {
+      // Parse name if firstName/lastName not available
+      let parsedFirstName = firstName || 'User';
+      let parsedLastName = lastName || '';
+      
+      if (!firstName && !lastName && name) {
+        const nameParts = name.trim().split(' ');
+        parsedFirstName = nameParts[0] || 'User';
+        parsedLastName = nameParts.slice(1).join(' ') || 'User';
+      } else if (!lastName) {
+        parsedLastName = 'User';
+      }
+      
+      // Create new user
+      user = new User({
+        email,
+        firstName: parsedFirstName,
+        lastName: parsedLastName,
+        googleId
+      });
+      await user.save();
+    }
+
+    // Generate token
+    const token = generateToken(user._id.toString());
+
+    res.status(200).json({
+      message: 'Google sign-in successful',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
+      }
+    });
+  } catch (error: any) {
+    console.error('Google sign-in error:', error);
+    res.status(500).json({ message: 'Server error during Google sign-in', error: error.message });
   }
 };
