@@ -31,7 +31,8 @@ jobs:
     - name: Build and start containers
       run: |
         cd ~/deployments/rea-boxing-site
-        docker compose --env-file .env.production -f docker-compose.prod.yml up --build -d
+        docker compose --env-file .env.production -f docker-compose.prod.yml build --no-cache frontend
+        docker compose --env-file .env.production -f docker-compose.prod.yml up -d
 
     - name: Wait for services to be healthy
       run: |
