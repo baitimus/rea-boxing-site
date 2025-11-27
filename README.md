@@ -2,20 +2,7 @@
 
 Full-stack application with Express TypeScript backend and Angular frontend.
 
-## Project Structure
 
-```
-rea-boxing-site/
-├── src/
-│   ├── backend/      # Express TypeScript API
-│   │   ├── src/
-│   │   │   └── server.ts
-│   │   ├── package.json
-│   │   └── tsconfig.json
-│   └── frontend/     # Angular application
-│       ├── src/
-│       └── package.json
-└── package.json      # Root package.json with scripts
 ```
 
 ## Setup
