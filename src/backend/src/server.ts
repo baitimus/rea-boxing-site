@@ -30,6 +30,12 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Request logging middleware
+app.use((req: Request, res: Response, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.get('origin') || 'none'} - IP: ${req.ip}`);
+  next();
+});
+
 // Routes
 app.get('/', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Server is running' });
