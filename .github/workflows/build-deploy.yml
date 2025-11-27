@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_URL: 192.168.1.6:5000
+  REGISTRY_URL: 192.168.1.5:5000
   PROJECT_NAME: rea-boxing-site
 
 jobs:
