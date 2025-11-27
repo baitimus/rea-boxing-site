@@ -22,24 +22,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check if .env.production exists
+        run: |
+          if [ ! -f .env.production ]; then
+            echo "❌ Error: .env.production file not found!"
+            echo "Please create .env.production in the project root with required variables"
+            exit 1
+          fi
+          echo "✅ .env.production file found"
+
       - name: Stop existing containers
-        run: docker compose -f docker-compose.prod.yml down
+        run: docker compose --env-file .env.production -f docker-compose.prod.yml down
         continue-on-error: true
 
       - name: Remove old images
-        run: docker compose -f docker-compose.prod.yml down --rmi all
+        run: docker compose --env-file .env.production -f docker-compose.prod.yml down --rmi all
         continue-on-error: true
 
       - name: Build Docker images
-        run: docker compose -f docker-compose.prod.yml build --no-cache
+        run: docker compose --env-file .env.production -f docker-compose.prod.yml build --no-cache
 
       - name: Start services
-        run: docker compose -f docker-compose.prod.yml up -d
+        run: docker compose --env-file .env.production -f docker-compose.prod.yml up -d
 
       - name: Wait for services to be healthy
         run: |
           sleep 30
-          docker compose -f docker-compose.prod.yml ps
+          docker compose --env-file .env.production -f docker-compose.prod.yml ps
 
       - name: Clean up dangling images
         run: docker image prune -f
@@ -48,4 +57,4 @@ jobs:
       - name: Deployment successful
         run: |
           echo "✅ Deployment completed successfully!"
-          docker compose -f docker-compose.prod.yml ps
+          docker compose --env-file .env.production -f docker-compose.prod.yml ps

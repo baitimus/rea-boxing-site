@@ -3,8 +3,6 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:7.0
-    env_file:
-      - ./.env.production
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
@@ -25,8 +23,6 @@ services:
     build:
       context: ./src/backend
       dockerfile: Dockerfile.prod
-    env_file:
-      - ./.env.production
     environment:
       NODE_ENV: production
       PORT: ${BACKEND_PORT}
@@ -44,11 +40,11 @@ services:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile.prod
-    env_file:
-      - ./.env.production
+      args:
+        API_URL: ${FRONTEND_API_URL}
+        GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     environment:
       NODE_ENV: production
-      API_URL: ${FRONTEND_API_URL}
     ports:
       - "${FRONTEND_HOST_PORT:-8080}:80"
     depends_on:

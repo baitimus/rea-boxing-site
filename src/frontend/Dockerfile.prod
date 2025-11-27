@@ -3,12 +3,22 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Accept build arguments
+ARG API_URL
+ARG GOOGLE_CLIENT_ID
+
 # Install dependencies for building the Angular app
 COPY package*.json ./
 RUN npm ci
 
-# Copy the rest of the project and build it
+# Copy the rest of the project
 COPY . .
+
+# Replace environment variables in the production config
+RUN sed -i "s|apiUrl: '.*'|apiUrl: '${API_URL}'|g" src/environments/environment.prod.ts && \
+    sed -i "s|googleClientId: '.*'|googleClientId: '${GOOGLE_CLIENT_ID}'|g" src/environments/environment.prod.ts
+
+# Build the application
 RUN npm run build
 
 FROM nginx:1.27-alpine AS runner
