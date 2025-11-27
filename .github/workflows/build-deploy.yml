@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_URL: 192.168.1.5:5000
-  PROJECT_NAME: absent
+  REGISTRY_URL: 192.168.1.6:5000
+  PROJECT_NAME: rea-boxing-site
 
 jobs:
   build-and-push:
@@ -37,19 +37,20 @@ jobs:
       run: |
         echo "🔨 Building backend image..."
         docker build \
-          --target prod \
+          -f src/backend/Dockerfile.prod \
           -t ${{ steps.tags.outputs.BACKEND_IMAGE }} \
           -t ${{ steps.tags.outputs.BACKEND_IMAGE_SHA }} \
-          ./source/backend
+          src/backend
         echo "✅ Backend image built"
 
     - name: Build frontend image
       run: |
         echo "🔨 Building frontend image..."
         docker build \
+          -f src/frontend/Dockerfile.prod \
           -t ${{ steps.tags.outputs.FRONTEND_IMAGE }} \
           -t ${{ steps.tags.outputs.FRONTEND_IMAGE_SHA }} \
-          ./source/frontend
+          src/frontend
         echo "✅ Frontend image built"
 
     - name: Push images to registry
@@ -98,12 +99,12 @@ jobs:
       run: |
         echo "🚀 Triggering deployment on ${{ secrets.DEPLOYMENT_HOST }}..."
         
-        response=$(curl -X POST \
-          -H "X-Webhook-Secret: ${{ secrets.WEBHOOK_SECRET }}" \
-          -H "Content-Type: application/json" \
-          -w "\n%{http_code}" \
-          -s \
-          http://${{ secrets.DEPLOYMENT_HOST }}:9000/hooks/deploy-absent)
+          response=$(curl -X POST \
+            -H "X-Webhook-Secret: ${{ secrets.WEBHOOK_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -w "\n%{http_code}" \
+            -s \
+            http://${{ secrets.DEPLOYMENT_HOST }}:9000/hooks/deploy-rea-boxing-site)
         
         http_code=$(echo "$response" | tail -n1)
         body=$(echo "$response" | head -n-1)
@@ -145,11 +146,11 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "## 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Access your application:" >> $GITHUB_STEP_SUMMARY
-        echo "- Frontend: http://${{ secrets.DEPLOYMENT_HOST }}" >> $GITHUB_STEP_SUMMARY
-        echo "- Backend: http://${{ secrets.DEPLOYMENT_HOST }}:3000" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Monitor deployment:" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
-        echo "ssh root@${{ secrets.DEPLOYMENT_HOST }} 'cd /root/deployments/absent && ./logs.sh'" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "### Access your application:" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend: http://${{ secrets.DEPLOYMENT_HOST }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Backend: http://${{ secrets.DEPLOYMENT_HOST }}:3000" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Monitor deployment:" >> $GITHUB_STEP_SUMMARY
+          echo "```bash" >> $GITHUB_STEP_SUMMARY
+          echo "ssh root@${{ secrets.DEPLOYMENT_HOST }} 'cd /root/deployments/rea-boxing-site && ./logs.sh'" >> $GITHUB_STEP_SUMMARY
+          echo "```" >> $GITHUB_STEP_SUMMARY
