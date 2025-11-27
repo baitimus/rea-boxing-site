@@ -14,20 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create .env.production file
-        run: |
-          echo "MONGODB_ROOT_USERNAME=${{ secrets.MONGODB_ROOT_USERNAME }}" > .env.production
-          echo "MONGODB_ROOT_PASSWORD=${{ secrets.MONGODB_ROOT_PASSWORD }}" >> .env.production
-          echo "MONGODB_DATABASE=${{ secrets.MONGODB_DATABASE }}" >> .env.production
-          echo "MONGODB_HOST_PORT=${{ secrets.MONGODB_HOST_PORT }}" >> .env.production
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env.production
-          echo "BACKEND_PORT=${{ secrets.BACKEND_PORT }}" >> .env.production
-          echo "BACKEND_HOST_PORT=${{ secrets.BACKEND_HOST_PORT }}" >> .env.production
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.production
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env.production
-          echo "FRONTEND_API_URL=${{ secrets.FRONTEND_API_URL }}" >> .env.production
-          echo "FRONTEND_HOST_PORT=${{ secrets.FRONTEND_HOST_PORT }}" >> .env.production
-
       - name: Stop existing containers
         run: docker-compose -f docker-compose.prod.yml down
         continue-on-error: true
@@ -54,5 +40,4 @@ jobs:
       - name: Deployment successful
         run: |
           Write-Host "✅ Deployment completed successfully!"
-          Write-Host "Backend: http://localhost:${{ secrets.BACKEND_HOST_PORT }}"
-          Write-Host "Frontend: http://localhost:${{ secrets.FRONTEND_HOST_PORT }}"
+          docker-compose -f docker-compose.prod.yml ps
