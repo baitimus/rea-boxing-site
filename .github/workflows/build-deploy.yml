@@ -25,7 +25,7 @@ jobs:
       run: |
         mkdir -p ~/deployments/rea-boxing-site
         cp docker-compose.prod.yml ~/deployments/rea-boxing-site/
-        cp .env.production ~/deployments/rea-boxing-site/ || true
+        cp .env.production ~/deployments/rea-boxing-site/
         cp -r src ~/deployments/rea-boxing-site/
 
     - name: Build and start containers
@@ -35,7 +35,6 @@ jobs:
 
     - name: Wait for services to be healthy
       run: |
-        cd ~/deployments/rea-boxing-site
         echo "Waiting for services to start..."
         sleep 30
         
@@ -55,7 +54,7 @@ jobs:
         
         # Check if backend is responding
         for i in {1..30}; do
-          if curl -f http://localhost:${BACKEND_HOST_PORT:-3000}/health >/dev/null 2>&1 || curl -f http://localhost:${BACKEND_HOST_PORT:-3000} >/dev/null 2>&1; then
+          if curl -f http://localhost:3000 >/dev/null 2>&1; then
             echo "✅ Backend is responding"
             break
           fi
@@ -69,7 +68,7 @@ jobs:
         
         # Check if frontend is responding
         for i in {1..30}; do
-          if curl -f http://localhost:${FRONTEND_HOST_PORT:-8080} >/dev/null 2>&1; then
+          if curl -f http://localhost:8080 >/dev/null 2>&1; then
             echo "✅ Frontend is responding"
             break
           fi
@@ -90,9 +89,9 @@ jobs:
         docker compose -f docker-compose.prod.yml ps
         echo ""
         echo "🌐 Service URLs:"
-        echo "  Frontend: http://localhost:${FRONTEND_HOST_PORT:-8080}"
-        echo "  Backend API: http://localhost:${BACKEND_HOST_PORT:-3000}"
-        echo "  MongoDB: Internal only (mongodb://mongodb:27017)"
+        echo "  Frontend: http://localhost:8080"
+        echo "  Backend API: http://localhost:3000"
+        echo "  MongoDB: Internal only"
 
     - name: Clean up old images
       run: |
