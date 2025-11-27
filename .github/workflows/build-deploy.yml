@@ -2,59 +2,108 @@ name: Build and Deploy
 
 on:
   push:
-    branches:
-      - master
-      - main
+    branches: [ main, master ]
   pull_request:
-    types:
-      - closed
-    branches:
-      - master
-      - main
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: self-hosted
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Check if .env.production exists
-        run: |
-          if [ ! -f .env.production ]; then
-            echo "❌ Error: .env.production file not found!"
-            echo "Please create .env.production in the project root with required variables"
+    - name: Stop existing containers
+      run: |
+        cd ~/deployments/rea-boxing-site || true
+        docker compose -f docker-compose.prod.yml down || true
+
+    - name: Create deployment directory
+      run: |
+        mkdir -p ~/deployments/rea-boxing-site
+        cp docker-compose.prod.yml ~/deployments/rea-boxing-site/
+        cp .env.production ~/deployments/rea-boxing-site/ || true
+        cp -r src ~/deployments/rea-boxing-site/
+
+    - name: Build and start containers
+      run: |
+        cd ~/deployments/rea-boxing-site
+        docker compose --env-file .env.production -f docker-compose.prod.yml up --build -d
+
+    - name: Wait for services to be healthy
+      run: |
+        cd ~/deployments/rea-boxing-site
+        echo "Waiting for services to start..."
+        sleep 30
+        
+        # Check if MongoDB is healthy
+        for i in {1..30}; do
+          if docker compose -f docker-compose.prod.yml ps | grep -q "mongodb.*healthy"; then
+            echo "✅ MongoDB is healthy"
+            break
+          fi
+          echo "Waiting for MongoDB... (attempt $i/30)"
+          sleep 10
+          if [ $i -eq 30 ]; then
+            echo "❌ MongoDB failed to start"
             exit 1
           fi
-          echo "✅ .env.production file found"
+        done
+        
+        # Check if backend is responding
+        for i in {1..30}; do
+          if curl -f http://localhost:${BACKEND_HOST_PORT:-3000}/health >/dev/null 2>&1 || curl -f http://localhost:${BACKEND_HOST_PORT:-3000} >/dev/null 2>&1; then
+            echo "✅ Backend is responding"
+            break
+          fi
+          echo "Waiting for backend... (attempt $i/30)"
+          sleep 10
+          if [ $i -eq 30 ]; then
+            echo "❌ Backend failed to start"
+            exit 1
+          fi
+        done
+        
+        # Check if frontend is responding
+        for i in {1..30}; do
+          if curl -f http://localhost:${FRONTEND_HOST_PORT:-8080} >/dev/null 2>&1; then
+            echo "✅ Frontend is responding"
+            break
+          fi
+          echo "Waiting for frontend... (attempt $i/30)"
+          sleep 10
+          if [ $i -eq 30 ]; then
+            echo "❌ Frontend failed to start"
+            exit 1
+          fi
+        done
 
-      - name: Stop existing containers
-        run: docker compose --env-file .env.production -f docker-compose.prod.yml down
-        continue-on-error: true
+    - name: Show deployment status
+      run: |
+        cd ~/deployments/rea-boxing-site
+        echo "🎉 Deployment successful!"
+        echo ""
+        echo "📊 Container Status:"
+        docker compose -f docker-compose.prod.yml ps
+        echo ""
+        echo "🌐 Service URLs:"
+        echo "  Frontend: http://localhost:${FRONTEND_HOST_PORT:-8080}"
+        echo "  Backend API: http://localhost:${BACKEND_HOST_PORT:-3000}"
+        echo "  MongoDB: Internal only (mongodb://mongodb:27017)"
 
-      - name: Remove old images
-        run: docker compose --env-file .env.production -f docker-compose.prod.yml down --rmi all
-        continue-on-error: true
+    - name: Clean up old images
+      run: |
+        # Remove dangling images to save space
+        docker image prune -f || true
+        echo "✅ Cleanup completed"
 
-      - name: Build Docker images
-        run: docker compose --env-file .env.production -f docker-compose.prod.yml build --no-cache
-
-      - name: Start services
-        run: docker compose --env-file .env.production -f docker-compose.prod.yml up -d
-
-      - name: Wait for services to be healthy
-        run: |
-          sleep 30
-          docker compose --env-file .env.production -f docker-compose.prod.yml ps
-
-      - name: Clean up dangling images
-        run: docker image prune -f
-        continue-on-error: true
-
-      - name: Deployment successful
-        run: |
-          echo "✅ Deployment completed successfully!"
-          docker compose --env-file .env.production -f docker-compose.prod.yml ps
+    - name: Send notification
+      if: failure()
+      run: |
+        echo "❌ Deployment failed!"
+        cd ~/deployments/rea-boxing-site
+        echo "📋 Container logs:"
+        docker compose -f docker-compose.prod.yml logs --tail=50
