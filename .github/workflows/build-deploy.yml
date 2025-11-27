@@ -1,0 +1,155 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+env:
+  REGISTRY_URL: 192.168.1.5:5000
+  PROJECT_NAME: absent
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Login to private registry
+      run: |
+        echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.REGISTRY_URL }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+        echo "✅ Logged in to registry"
+
+    - name: Set image tags
+      id: tags
+      run: |
+        SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+        echo "BACKEND_IMAGE=${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}-backend:latest" >> $GITHUB_OUTPUT
+        echo "FRONTEND_IMAGE=${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}-frontend:latest" >> $GITHUB_OUTPUT
+        echo "BACKEND_IMAGE_SHA=${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}-backend:$SHORT_SHA" >> $GITHUB_OUTPUT
+        echo "FRONTEND_IMAGE_SHA=${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}-frontend:$SHORT_SHA" >> $GITHUB_OUTPUT
+        echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
+
+    - name: Build backend image
+      run: |
+        echo "🔨 Building backend image..."
+        docker build \
+          --target prod \
+          -t ${{ steps.tags.outputs.BACKEND_IMAGE }} \
+          -t ${{ steps.tags.outputs.BACKEND_IMAGE_SHA }} \
+          ./source/backend
+        echo "✅ Backend image built"
+
+    - name: Build frontend image
+      run: |
+        echo "🔨 Building frontend image..."
+        docker build \
+          -t ${{ steps.tags.outputs.FRONTEND_IMAGE }} \
+          -t ${{ steps.tags.outputs.FRONTEND_IMAGE_SHA }} \
+          ./source/frontend
+        echo "✅ Frontend image built"
+
+    - name: Push images to registry
+      run: |
+        echo "📤 Pushing backend images..."
+        docker push ${{ steps.tags.outputs.BACKEND_IMAGE }}
+        docker push ${{ steps.tags.outputs.BACKEND_IMAGE_SHA }}
+        
+        echo "📤 Pushing frontend images..."
+        docker push ${{ steps.tags.outputs.FRONTEND_IMAGE }}
+        docker push ${{ steps.tags.outputs.FRONTEND_IMAGE_SHA }}
+        
+        echo "✅ All images pushed successfully!"
+
+    - name: Verify images in registry
+      run: |
+        echo "🔍 Verifying images in registry..."
+        curl -u ${{ secrets.REGISTRY_USERNAME }}:${{ secrets.REGISTRY_PASSWORD }} \
+          http://${{ env.REGISTRY_URL }}/v2/_catalog
+
+    - name: Clean up local images
+      run: |
+        docker image prune -f
+        echo "🧹 Cleanup completed"
+
+    - name: Logout from registry
+      if: always()
+      run: docker logout ${{ env.REGISTRY_URL }}
+
+    - name: Build summary
+      run: |
+        echo "## 🎉 Build Complete!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Images pushed:" >> $GITHUB_STEP_SUMMARY
+        echo "- Backend: \`${{ steps.tags.outputs.BACKEND_IMAGE }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Frontend: \`${{ steps.tags.outputs.FRONTEND_IMAGE }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### SHA: \`${{ steps.tags.outputs.SHORT_SHA }}\`" >> $GITHUB_STEP_SUMMARY
+
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted
+    
+    steps:
+    - name: Trigger deployment webhook
+      run: |
+        echo "🚀 Triggering deployment on ${{ secrets.DEPLOYMENT_HOST }}..."
+        
+        response=$(curl -X POST \
+          -H "X-Webhook-Secret: ${{ secrets.WEBHOOK_SECRET }}" \
+          -H "Content-Type: application/json" \
+          -w "\n%{http_code}" \
+          -s \
+          http://${{ secrets.DEPLOYMENT_HOST }}:9000/hooks/deploy-absent)
+        
+        http_code=$(echo "$response" | tail -n1)
+        body=$(echo "$response" | head -n-1)
+        
+        echo "HTTP Status: $http_code"
+        echo "Response: $body"
+        
+        if [ "$http_code" -eq 200 ]; then
+          echo "✅ Deployment triggered successfully!"
+        else
+          echo "❌ Webhook failed with status $http_code"
+          exit 1
+        fi
+
+    - name: Wait for deployment
+      run: |
+        echo "⏳ Waiting 60 seconds for deployment to complete..."
+        sleep 60
+
+    - name: Verify deployment
+      run: |
+        echo "🔍 Checking deployment health..."
+        
+        if curl -f -m 10 http://${{ secrets.DEPLOYMENT_HOST }}:80 >/dev/null 2>&1; then
+          echo "✅ Frontend is responding"
+        else
+          echo "❌ Frontend is not responding"
+        fi
+        
+        if curl -f -m 10 http://${{ secrets.DEPLOYMENT_HOST }}:3000 >/dev/null 2>&1; then
+          echo "✅ Backend is responding"
+        else
+          echo "⚠️  Backend is not responding"
+        fi
+
+    - name: Deployment summary
+      if: always()
+      run: |
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Access your application:" >> $GITHUB_STEP_SUMMARY
+        echo "- Frontend: http://${{ secrets.DEPLOYMENT_HOST }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Backend: http://${{ secrets.DEPLOYMENT_HOST }}:3000" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Monitor deployment:" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+        echo "ssh root@${{ secrets.DEPLOYMENT_HOST }} 'cd /root/deployments/absent && ./logs.sh'" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
