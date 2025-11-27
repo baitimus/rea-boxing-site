@@ -11,7 +11,8 @@ declare const google: any;
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
@@ -22,6 +23,8 @@ export class LoginComponent implements OnInit {
   password = '';
   errorMessage = '';
   isLoading = false;
+  showEmailError = false;
+  showPasswordError = false;
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -57,20 +60,32 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           console.error('Google sign-in error:', error);
-          this.errorMessage = error.error?.message || 'Google sign-in failed. Please try again.';
+          this.errorMessage = this.getErrorMessage(error);
           this.isLoading = false;
         }
       });
   }
 
   onSubmit(): void {
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Please fill in all fields';
+    // Reset error states
+    this.showEmailError = false;
+    this.showPasswordError = false;
+    this.errorMessage = '';
+
+    // Validate fields
+    if (!this.email || !this.isValidEmail(this.email)) {
+      this.showEmailError = true;
+      this.errorMessage = 'Please enter a valid email address';
+      return;
+    }
+
+    if (!this.password) {
+      this.showPasswordError = true;
+      this.errorMessage = 'Please enter your password';
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     this.authService.login({ email: this.email, password: this.password })
       .subscribe({
@@ -81,9 +96,45 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           console.error('Login error:', error);
-          this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+          this.errorMessage = this.getErrorMessage(error);
           this.isLoading = false;
         }
       });
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  private getErrorMessage(error: any): string {
+    if (error.error?.message) {
+      const message = error.error.message;
+      
+      // Customize error messages for better UX
+      if (message.includes('Invalid email or password')) {
+        return 'Invalid email or password. Please check your credentials and try again.';
+      }
+      if (message.includes('User not found')) {
+        return 'No account found with this email. Please register first.';
+      }
+      if (message.includes('Google sign-in failed')) {
+        return 'Google sign-in failed. Please try again or use email login.';
+      }
+      
+      return message;
+    }
+    
+    if (error.status === 401) {
+      return 'Invalid email or password. Please check your credentials.';
+    }
+    if (error.status === 500) {
+      return 'Server error. Please try again later.';
+    }
+    if (error.status === 0) {
+      return 'Cannot connect to server. Please check your internet connection.';
+    }
+    
+    return 'Login failed. Please try again.';
   }
 }

@@ -11,7 +11,8 @@ declare const google: any;
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   private authService = inject(AuthService);
@@ -24,6 +25,10 @@ export class RegisterComponent implements OnInit {
   lastName = '';
   errorMessage = '';
   isLoading = false;
+  showEmailError = false;
+  showPasswordError = false;
+  showFirstNameError = false;
+  showLastNameError = false;
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -59,20 +64,49 @@ export class RegisterComponent implements OnInit {
         },
         error: (error) => {
           console.error('Google sign-in error:', error);
-          this.errorMessage = error.error?.message || 'Google sign-in failed. Please try again.';
+          this.errorMessage = this.getErrorMessage(error);
           this.isLoading = false;
         }
       });
   }
 
   onSubmit(): void {
-    if (!this.email || !this.password || !this.firstName || !this.lastName) {
-      this.errorMessage = 'Please fill in all fields';
+    // Reset error states
+    this.showFirstNameError = false;
+    this.showLastNameError = false;
+    this.showEmailError = false;
+    this.showPasswordError = false;
+    this.errorMessage = '';
+
+    // Validate all fields
+    let hasError = false;
+
+    if (!this.firstName || this.firstName.trim().length === 0) {
+      this.showFirstNameError = true;
+      hasError = true;
+    }
+
+    if (!this.lastName || this.lastName.trim().length === 0) {
+      this.showLastNameError = true;
+      hasError = true;
+    }
+
+    if (!this.email || !this.isValidEmail(this.email)) {
+      this.showEmailError = true;
+      hasError = true;
+    }
+
+    if (!this.password || this.password.length < 6) {
+      this.showPasswordError = true;
+      hasError = true;
+    }
+
+    if (hasError) {
+      this.errorMessage = 'Please fix the errors above';
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     this.authService.register({ 
       email: this.email, 
@@ -87,9 +121,45 @@ export class RegisterComponent implements OnInit {
       },
       error: (error) => {
         console.error('Registration error:', error);
-        this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        this.errorMessage = this.getErrorMessage(error);
         this.isLoading = false;
       }
     });
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  private getErrorMessage(error: any): string {
+    if (error.error?.message) {
+      const message = error.error.message;
+      
+      // Customize error messages for better UX
+      if (message.includes('User already exists') || message.includes('already exists with this email')) {
+        return 'An account with this email already exists. Please login instead.';
+      }
+      if (message.includes('Please provide all required fields')) {
+        return 'Please fill in all required fields.';
+      }
+      if (message.includes('Google sign-in failed')) {
+        return 'Google sign-in failed. Please try again or use email registration.';
+      }
+      
+      return message;
+    }
+    
+    if (error.status === 400) {
+      return 'Invalid registration data. Please check your information.';
+    }
+    if (error.status === 500) {
+      return 'Server error. Please try again later.';
+    }
+    if (error.status === 0) {
+      return 'Cannot connect to server. Please check your internet connection.';
+    }
+    
+    return 'Registration failed. Please try again.';
   }
 }
