@@ -1,4 +1,4 @@
-# Frontend Dockerfile
+# Backend Dockerfile
 FROM node:20-alpine
 
 WORKDIR /app
@@ -10,6 +10,6 @@ RUN npm install
 # Copy source code (will be overridden by volume in dev)
 COPY . .
 
-EXPOSE 4200
+EXPOSE 3000
 
-CMD ["npm", "start", "--", "--host", "0.0.0.0", "--poll", "2000"]
+CMD ["npm", "run", "dev"]
