@@ -13,13 +13,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
-app.get('/api', (req: Request, res: Response) => {
-  res.json({ message: 'Welcome to REA Boxing API' });
-});
+
 
 // Start server
 app.listen(PORT, () => {
