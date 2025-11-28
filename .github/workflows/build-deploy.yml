@@ -19,7 +19,7 @@ jobs:
     - name: Stop existing containers
       run: |
         cd ~/deployments/rea-boxing-site || true
-        docker compose -f docker-compose.prod.yml down || true
+        docker compose -f docker-compose.prod.yml down --remove-orphans --rmi local || true
 
     - name: Create deployment directory
       run: |
@@ -28,6 +28,10 @@ jobs:
         cp docker-compose.prod.yml ~/deployments/rea-boxing-site/
         cp .env.production ~/deployments/rea-boxing-site/
         cp -r src ~/deployments/rea-boxing-site/
+
+    - name: Clear docker build cache
+      run: |
+        docker builder prune -f || true
 
     - name: Build and start containers
       run: |
