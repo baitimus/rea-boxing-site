@@ -23,6 +23,7 @@ jobs:
 
     - name: Create deployment directory
       run: |
+        rm -rf ~/deployments/rea-boxing-site
         mkdir -p ~/deployments/rea-boxing-site
         cp docker-compose.prod.yml ~/deployments/rea-boxing-site/
         cp .env.production ~/deployments/rea-boxing-site/
