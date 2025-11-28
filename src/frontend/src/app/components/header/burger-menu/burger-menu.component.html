@@ -13,6 +13,10 @@
   @if (menuOpen()) {
     <div class="menu-overlay" (click)="closeMenu()"></div>
     <nav class="menu-panel">
+      <a routerLink="/angebot" (click)="closeMenu()">Angebot</a>
+      <a routerLink="/ueber-mich" (click)="closeMenu()">Über mich</a>
+      <a routerLink="/kontakt" (click)="closeMenu()">Kontakt</a>
+      <hr />
       <a routerLink="/login" (click)="closeMenu()">Log In</a>
     </nav>
   }
