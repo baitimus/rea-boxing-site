@@ -7,7 +7,7 @@ import cors from 'cors';
 import { toNodeHandler } from 'better-auth/node';
 import type { AppConfig } from './config';
 import { auth } from './services/auth';
-import { healthRouter, pdfRouter } from './routes';
+
 import { requestLogger } from './middleware';
 import { errorHandler, notFoundHandler } from './utils/errors';
 import { logger } from './utils/logger';
@@ -64,8 +64,8 @@ export const createApp = (config: AppConfig): Application => {
   app.use('/api/auth', toNodeHandler(auth));
 
   // Application routes
-  app.use(healthRouter);
-  app.use(pdfRouter);
+
+  
 
   // 404 handler for undefined routes
   app.use(notFoundHandler);

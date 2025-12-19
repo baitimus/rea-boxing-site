@@ -1,21 +1,18 @@
 services:
   mongo:
-    container_name: "${APP_NAME:-reahBoxing}-mongo"
-    build:
-      context: ./src/database
-      dockerfile: Dockerfile
-    
+    container_name: "${APP_NAME:-mindMovment}-mongo"
+    image: mongo:7.0
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USERNAME:-absent}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD:-absent}"
-      MONGO_INITDB_DATABASE: "${MONGO_DB:-absent}"
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USERNAME:-reah}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD:-12345678}"
+      MONGO_INITDB_DATABASE: "${MONGO_DB:-mind-movment}"
     ports:
       - "${MONGO_PORT:-27017}:27017"
     volumes:
       - mongo-data:/data/db
 
   backend:
-    container_name: "${APP_NAME:-reahBoxing}-backend"
+    container_name: "${APP_NAME:-mindMovment}-backend"
     build:
       context: ./src/backend
       dockerfile: Dockerfile
@@ -31,7 +28,7 @@ services:
       - mongo
 
   frontend:
-    container_name: "${APP_NAME:-reahBoxing}-frontend"
+    container_name: "${APP_NAME:-mindMovment}-frontend"
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
