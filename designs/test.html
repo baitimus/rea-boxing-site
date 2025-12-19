@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind & Movement Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font style to match the handwritten vibe if desired, 
+           otherwise using standard sans-serif for clean UI */
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <nav class="flex justify-between items-center px-8 py-4 bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="text-xl font-bold uppercase tracking-widest">Mind & Movement</div>
+        <div class="hidden md:flex space-x-8 text-sm uppercase">
+            <a href="#" class="hover:text-blue-600">Home</a>
+            <a href="#angebot" class="hover:text-blue-600">Angebot</a>
+            <a href="#ueber" class="hover:text-blue-600">Über Mich</a>
+            <a href="#kontakt" class="hover:text-blue-600">Kontakt</a>
+        </div>
+        <a href="#buchen" class="bg-black text-white px-4 py-2 text-sm uppercase font-semibold hover:bg-gray-800 transition">Jetzt Termin Buchen</a>
+    </nav>
+
+    <header class="text-center py-20 px-4 bg-gray-100 border-b border-gray-200">
+        <div class="max-w-4xl mx-auto">
+            <div class="w-32 h-32 rounded-full border-2 border-gray-400 mx-auto mb-6 flex items-center justify-center text-gray-400">
+                <span>Logo</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold uppercase mb-4">Mind & Movement</h1>
+            <p class="text-xl text-gray-600 mb-8">Therapeutisches Boxen & Psycholog. Beratung</p>
+            <button class="bg-transparent border-2 border-black px-8 py-3 uppercase tracking-wide hover:bg-black hover:text-white transition">Jetzt Buchen</button>
+        </div>
+    </header>
+
+    <section id="angebot" class="py-16 px-8 max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-center uppercase mb-12 border-2 border-black inline-block p-2 mx-auto block w-max">Angebot</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="border border-gray-300 p-6 bg-white shadow-sm flex flex-col items-center text-center">
+                <div class="w-full h-40 bg-gray-200 mb-4 flex items-center justify-center text-gray-500">[Bild: 1:1]</div>
+                <h3 class="font-bold text-lg mb-2">1:1 Einzel</h3>
+                <p class="text-sm text-gray-600 mb-4">Zeit für dich. Individuelles Training.</p>
+                <button class="mt-auto border border-black px-4 py-1 text-sm uppercase hover:bg-gray-100">Buchen</button>
+            </div>
+            
+            <div class="border border-gray-300 p-6 bg-white shadow-sm flex flex-col items-center text-center">
+                <div class="w-full h-40 bg-gray-200 mb-4 flex items-center justify-center text-gray-500">[Bild: Gruppen]</div>
+                <h3 class="font-bold text-lg mb-2">Gruppen</h3>
+                <p class="text-sm text-gray-600 mb-4">Gemeinsam stark. Soziale Interaktion.</p>
+                <button class="mt-auto border border-black px-4 py-1 text-sm uppercase hover:bg-gray-100">Buchen</button>
+            </div>
+
+            <div class="border border-gray-300 p-6 bg-white shadow-sm flex flex-col items-center text-center">
+                <div class="w-full h-40 bg-gray-200 mb-4 flex items-center justify-center text-gray-500">[Bild: Workshops]</div>
+                <h3 class="font-bold text-lg mb-2">Workshops</h3>
+                <p class="text-sm text-gray-600 mb-4">Workshops & mehr zum Thema.</p>
+                <button class="mt-auto border border-black px-4 py-1 text-sm uppercase hover:bg-gray-100">Mehr</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-200 py-6 text-center border-y border-gray-300">
+        <div class="max-w-4xl mx-auto px-4">
+            <span class="border border-black px-2 py-1 font-bold mr-2 bg-white">NEWS</span>
+            <span class="font-medium">Powerstart Aktion 20% auf Einzel & Bandagen geschenkt (Gruppen)</span>
+            <a href="#" class="block mt-2 text-sm underline md:inline md:ml-4 md:mt-0">Jetzt Probetraining buchen &rarr;</a>
+        </div>
+    </section>
+
+    <section id="ueber" class="py-16 px-8 max-w-6xl mx-auto border-b border-gray-300">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <h3 class="text-2xl font-bold uppercase mb-6 border border-black inline-block p-1">Über Mich</h3>
+                <h4 class="text-xl font-semibold mb-4">Wieso Mind & Movement?</h4>
+                <div class="h-48 bg-gray-200 mb-4 float-right w-1/2 ml-4 flex items-center justify-center">[Foto]</div>
+                <p class="text-gray-600 mb-4">
+                    Hier steht der Text über deine Erfahrung, deinen Hintergrund und warum du tust, was du tust.
+                    Das sagen Kund:innen über mich...
+                </p>
+                <div class="mt-8 p-4 bg-gray-100 border-l-4 border-black">
+                    <p class="italic text-sm">"Tolle Erfahrung, hat mir sehr geholfen!"</p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-bold uppercase mb-6 border border-black inline-block p-1">FAQ</h3>
+                <div class="space-y-4">
+                    <details class="group">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-3 border border-gray-300 bg-white">
+                            <span>Brauche ich Vorerfahrung?</span>
+                            <span class="transition group-open:rotate-180">
+                                <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                            </span>
+                        </summary>
+                        <div class="text-gray-600 mt-3 group-open:animate-fadeIn p-3">
+                            Nein, das Angebot richtet sich auch an Anfänger.
+                        </div>
+                    </details>
+                    <details class="group">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-3 border border-gray-300 bg-white">
+                            <span>Was muss ich mitbringen?</span>
+                            <span class="transition group-open:rotate-180">
+                                <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                            </span>
+                        </summary>
+                        <div class="text-gray-600 mt-3 group-open:animate-fadeIn p-3">
+                            Sportkleidung und ein Handtuch reichen aus.
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kontakt" class="py-16 px-8 max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-center uppercase mb-12 border-2 border-black inline-block p-2 mx-auto block w-max">Kontakt</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="bg-gray-100 p-6 border border-gray-300">
+                <h3 class="font-bold mb-4">Kontaktformular</h3>
+                <p class="mb-4 text-sm">Ich freue mich...</p>
+                <form class="space-y-4">
+                    <input type="text" placeholder="Vorname *" class="w-full p-2 border border-gray-400 bg-white">
+                    <input type="text" placeholder="Name *" class="w-full p-2 border border-gray-400 bg-white">
+                    <input type="email" placeholder="Mail *" class="w-full p-2 border border-gray-400 bg-white">
+                    <textarea placeholder="Nachricht" rows="4" class="w-full p-2 border border-gray-400 bg-white"></textarea>
+                    <button class="bg-black text-white px-6 py-2 uppercase hover:bg-gray-800">Senden</button>
+                </form>
+            </div>
+
+            <div>
+                <h3 class="font-bold mb-4">Hier findest du uns</h3>
+                <div class="bg-gray-200 h-48 w-full flex items-center justify-center text-gray-500 mb-6 border border-gray-300">
+                    [Google Maps Karte]
+                </div>
+                <div class="space-y-2 text-sm">
+                    <p><strong>Adresse:</strong> Musterstraße 1, 8000 Zürich</p>
+                    <p><strong>Tel:</strong> +41 79 000 00 00</p>
+                    <p><strong>Mail:</strong> kontakt@mindmovement.ch</p>
+                    <div class="flex space-x-4 mt-4">
+                        <span class="p-2 border border-black rounded-full cursor-pointer hover:bg-gray-200">Insta</span>
+                        <span class="p-2 border border-black rounded-full cursor-pointer hover:bg-gray-200">WhatsApp</span>
+                    </div>
+                </div>
+                <div class="mt-6 grid grid-cols-2 gap-2">
+                     <div class="h-24 bg-gray-200 border border-gray-300 flex items-center justify-center text-xs">[Fotos Raum]</div>
+                     <div class="h-24 bg-gray-200 border border-gray-300 flex items-center justify-center text-xs">[Equipment]</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-100 py-8 text-center text-sm border-t border-gray-300">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0 text-left">
+                <strong>Mind & Movement</strong><br>
+                Adresse Zeile 1<br>
+                Adresse Zeile 2
+            </div>
+            <div class="flex space-x-4 mb-4 md:mb-0">
+                <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center">T</div>
+                <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center">M</div>
+                <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center">W</div>
+                <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center">I</div>
+            </div>
+            <div class="text-right space-x-4">
+                <a href="#" class="underline">AGB</a>
+                <a href="#" class="underline">Datenschutz</a>
+                <a href="#" class="underline">Impressum</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
