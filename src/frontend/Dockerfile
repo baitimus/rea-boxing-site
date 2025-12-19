@@ -1,15 +1,15 @@
-# Frontend Dockerfile
 FROM node:20-alpine
 
 WORKDIR /app
+ENV NODE_ENV=development
 
-# Install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy source code (will be overridden by volume in dev)
 COPY . .
+COPY .env.development .env
 
 EXPOSE 4200
 
-CMD ["npm", "start", "--", "--host", "0.0.0.0", "--poll", "2000"]
+
+CMD ["npm", "run", "start"]

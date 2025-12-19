@@ -1,0 +1,89 @@
+/* Reusing the atmospheric effects from Home Component */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.dashboard-wrapper {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, rgba(16, 185, 129, 0.15), rgba(15, 23, 42, 1) 50%);
+  position: relative;
+}
+
+/* Background Gradients & Texture */
+.gradient-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(16, 185, 129, 0.1), transparent 45%, rgba(94, 234, 212, 0.05));
+  opacity: 0.8;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Cfilter id="n" x="0" y="0" width="100%25" height="100%25"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)" opacity="0.14"/%3E%3C/svg%3E');
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Wizard Specific Styles */
+.wizard-step-indicator {
+  @apply w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border transition-all duration-300;
+}
+
+.wizard-step-active {
+  @apply bg-emerald-500 text-slate-900 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.4)];
+}
+
+.wizard-step-inactive {
+  @apply bg-slate-800 text-slate-500 border-slate-700;
+}
+
+.wizard-step-completed {
+  @apply bg-emerald-500/20 text-emerald-400 border-emerald-500/50;
+}
+
+/* Radio Card Selection */
+.radio-card-label {
+  @apply cursor-pointer relative block;
+}
+
+.radio-card-input {
+  @apply sr-only;
+}
+
+.radio-card-content {
+  @apply p-4 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-all duration-200 flex flex-col items-center gap-3 text-center h-full;
+}
+
+.radio-card-input:checked + .radio-card-content {
+  @apply border-emerald-500 bg-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.1)];
+}
+
+.radio-card-input:checked + .radio-card-content .radio-icon {
+  @apply text-emerald-400 scale-110;
+}
+
+.radio-icon {
+  @apply text-slate-400 transition-transform duration-300;
+}
+
+/* Custom Scrollbar for the dashboard if needed */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(45, 212, 191, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 212, 191, 0.5);
+}

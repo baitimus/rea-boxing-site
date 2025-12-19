@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api-rea.breachmarket.xyz/api',
-  googleClientId: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
+  appName: 'Absent',
+  apiUrl: 'https://api.absent.one'
 };

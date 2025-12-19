@@ -1,106 +1,125 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { getAuthClient, initAuthClient } from './auth-client';
+import { FRONTEND_CONFIG } from '../config/frontend-config';
 
 export interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-}
-
-export interface AuthResponse {
-  message: string;
-  token: string;
-  user: User;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  role?: string;
+  emailVerified?: boolean;
+  schulnetzCalendarUrl?: string;
+  fullname?: string;
+  school?: string;
+  berufsbildner?: string;
+  berufsbildnerEmail?: string;
+  berufsbildnerPhoneNumber?: string;
+  dateOfBirth?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private http = inject(HttpClient);
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_KEY = 'auth_user';
-  
-  private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
+  private authClient: any;
+  private sessionCheckPromise: Promise<void> | null = null;
+  private isInitialized = false;
+  private config = inject(FRONTEND_CONFIG);
 
-  private getUserFromStorage(): User | null {
-    const userJson = localStorage.getItem(this.USER_KEY);
-    return userJson ? JSON.parse(userJson) : null;
+  private ensureAuthClient() {
+    if (!this.authClient) {
+      this.authClient = initAuthClient(this.config.apiUrl);
+    }
+    return this.authClient;
   }
 
-  register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, data)
-      .pipe(
-        tap(response => this.handleAuthSuccess(response))
-      );
+  async checkSession(): Promise<void> {
+    if (this.sessionCheckPromise) {
+      return this.sessionCheckPromise;
+    }
+
+    this.sessionCheckPromise = (async () => {
+      try {
+        const client = this.ensureAuthClient();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Session check timeout')), 3000)
+        );
+        
+        const session = await Promise.race([
+          client.getSession(),
+          timeoutPromise
+        ]);
+        
+        if (session?.data?.user) {
+          this.currentUserSubject.next(session.data.user as User);
+        } else {
+          this.currentUserSubject.next(null);
+        }
+        this.isInitialized = true;
+      } catch (error) {
+        console.error(error);
+        this.currentUserSubject.next(null);
+        this.isInitialized = true;
+      } finally {
+        this.sessionCheckPromise = null;
+      }
+    })();
+
+    return this.sessionCheckPromise;
   }
 
-  login(data: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, data)
-      .pipe(
-        tap(response => this.handleAuthSuccess(response))
-      );
+  async isAuthenticated(): Promise<boolean> {
+    if (!this.isInitialized) {
+      await this.checkSession();
+    }
+    return this.currentUserSubject.value !== null;
   }
 
-  logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
+  isAuthenticatedSync(): boolean {
+    return this.currentUserSubject.value !== null;
+  }
+
+  async logout(): Promise<void> {
+    const client = this.ensureAuthClient();
+    await client.signOut();
     this.currentUserSubject.next(null);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
-  }
-
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    return token !== null && !this.isTokenExpired(token);
   }
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  getProfile(): Observable<{ user: User }> {
-    return this.http.get<{ user: User }>(`${environment.apiUrl}/auth/profile`);
+  getClient() {
+    return this.ensureAuthClient();
   }
 
-  googleSignIn(credential: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/google`, { credential })
-      .pipe(
-        tap(response => this.handleAuthSuccess(response))
-      );
+  async refreshSession(): Promise<void> {
+    this.isInitialized = false;
+    await this.checkSession();
   }
 
-  private handleAuthSuccess(response: AuthResponse): void {
-    localStorage.setItem(this.TOKEN_KEY, response.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
-    this.currentUserSubject.next(response.user);
+  getAuthHeaders(): HeadersInit {
+    return {
+      'Content-Type': 'application/json',
+    };
   }
 
-  private isTokenExpired(token: string): boolean {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expiry = payload.exp;
-      return expiry ? (Math.floor(Date.now() / 1000)) >= expiry : false;
-    } catch {
-      return true;
-    }
+  async authenticatedFetch(url: string, options?: RequestInit): Promise<Response> {
+    const client = this.ensureAuthClient();
+    const fullUrl = url.startsWith('http') ? url : `${this.config.apiUrl}${url}`;
+    
+    await client.getSession();
+    
+    const headers = new Headers(options?.headers);
+    headers.set('Content-Type', 'application/json');
+    
+    return fetch(fullUrl, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
   }
 }

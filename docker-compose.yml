@@ -1,68 +1,51 @@
-
-version: '3.8'
-
 services:
-  mongodb:
-    image: mongo:7.0
-    ports:
-      - "27017:27017"
+  mongo:
+    container_name: "${APP_NAME:-reahBoxing}-mongo"
+    build:
+      context: ./src/database
+      dockerfile: Dockerfile
+    
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin123
-      - MONGO_INITDB_DATABASE=rea_boxing
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USERNAME:-absent}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD:-absent}"
+      MONGO_INITDB_DATABASE: "${MONGO_DB:-absent}"
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
     volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
-    restart: unless-stopped
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - mongo-data:/data/db
 
   backend:
+    container_name: "${APP_NAME:-reahBoxing}-backend"
     build:
       context: ./src/backend
       dockerfile: Dockerfile
+    env_file:
+      - ./src/backend/.env.development
     ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - MONGODB_URI=mongodb://admin:admin123@mongodb:27017/rea_boxing?authSource=admin
+      - "${BACKEND_PORT:-3000}:3000"
     volumes:
       - ./src/backend/src:/app/src
-      - ./src/backend/package.json:/app/package.json
-      - ./src/backend/tsconfig.json:/app/tsconfig.json
-      - backend_node_modules:/app/node_modules
-    command: sh -c "npm install && npm run dev"
+      - /app/node_modules
+    command: npm run start:dev
     depends_on:
-      mongodb:
-        condition: service_healthy
-    restart: unless-stopped
+      - mongo
 
   frontend:
+    container_name: "${APP_NAME:-reahBoxing}-frontend"
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
+    env_file:
+      - ./src/frontend/.env.development
     ports:
-      - "4200:4200"
-    environment:
-      - NODE_ENV=development
+      - "${FRONTEND_PORT:-4200}:4200"
     volumes:
-      - ./src/frontend/src:/app/src
-      - ./src/frontend/angular.json:/app/angular.json
-      - ./src/frontend/tsconfig.json:/app/tsconfig.json
-      - ./src/frontend/tsconfig.app.json:/app/tsconfig.app.json
-      - ./src/frontend/package.json:/app/package.json
-      - frontend_node_modules:/app/node_modules
-    command: npm start -- --host 0.0.0.0 --poll 2000
+      - ./src/frontend:/app
+      - /app/node_modules
     depends_on:
       - backend
-    restart: unless-stopped
+      - mongo
+    command: npm run start
 
 volumes:
-  backend_node_modules:
-  frontend_node_modules:
-  mongodb_data:
-  mongodb_config:
+  mongo-data:

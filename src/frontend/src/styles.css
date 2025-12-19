@@ -1,15 +1,27 @@
-/* Global baseline styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
 
 :root {
-	color-scheme: dark;
+	color-scheme: light;
+}
+
+html {
+	scrollbar-width: none;
 }
 
 body {
-	margin: 0;
-	min-height: 100vh;
-	background-color: #0a0a0a;
-	color: #f5f5f5;
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+	@apply m-0 min-h-screen bg-slate-950 text-slate-100 antialiased;
+	overflow-x: hidden;
+	-ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+	display: none;
 }

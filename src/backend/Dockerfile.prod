@@ -1,28 +1,25 @@
-# Production image for the backend API
-FROM node:20-alpine AS builder
 
+
+
+FROM node:20-alpine AS base
 WORKDIR /app
 
-# Install dependencies for building
+FROM base AS deps
 COPY package*.json ./
 RUN npm ci
 
-# Copy source and build the TypeScript project
+FROM deps AS build
 COPY tsconfig.json ./
 COPY src ./src
 RUN npm run build
 
-FROM node:20-alpine AS runner
-
+FROM node:20-alpine AS production
 WORKDIR /app
 ENV NODE_ENV=production
-
-# Install only production dependencies
 COPY package*.json ./
 RUN npm ci --omit=dev
-
-# Copy the compiled output from the build stage
-COPY --from=builder /app/dist ./dist
-
+COPY --from=build /app/dist ./dist
+COPY pdfs ./pdfs
+COPY .env.production .env
 EXPOSE 3000
 CMD ["node", "dist/server.js"]

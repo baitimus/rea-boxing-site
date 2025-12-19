@@ -1,53 +1,145 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { connectDatabase } from './config/database';
-import authRoutes from './routes/authRoutes';
+/**
+ * Server initialization and lifecycle management
+ */
 
-dotenv.config();
+import 'dotenv/config';
+import type { Server } from 'http';
+import { createApp } from './app';
+import { connectToDatabase, disconnectFromDatabase } from './db';
+import { ensureProcessMetadata, loadAppConfig } from './config';
+import { logger } from './utils/logger';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+// Load application configuration
+const config = loadAppConfig();
+ensureProcessMetadata(config.metadata);
 
-// Connect to database
-connectDatabase();
+let httpServer: Server | null = null;
+let isShuttingDown = false;
 
-// CORS configuration
-app.use(cors({
-  origin: [
-    'http://localhost:4200',
-    'http://localhost:3000',
-    'http://localhost:8080',
-    'https://rea.breachmarket.xyz',
-    'https://api-rea.breachmarket.xyz'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+/**
+ * Close HTTP server gracefully
+ */
+const closeHttpServer = (): Promise<void> =>
+  new Promise((resolve, reject) => {
+    if (!httpServer) {
+      resolve();
+      return;
+    }
 
-// Body parser middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+    httpServer.close((closeError) => {
+      if (closeError) {
+        reject(closeError);
+        return;
+      }
+      resolve();
+    });
+  });
 
-// Request logging middleware
-app.use((req: Request, res: Response, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.get('origin') || 'none'} - IP: ${req.ip}`);
-  next();
+/**
+ * Graceful shutdown handler
+ */
+const gracefulShutdown = async (signal: NodeJS.Signals) => {
+  if (isShuttingDown) {
+    return;
+  }
+
+  isShuttingDown = true;
+  logger.info(`Received ${signal}. Initiating graceful shutdown...`);
+
+  try {
+    // Close database connection
+    await disconnectFromDatabase();
+    logger.info('Database connection closed');
+  } catch (error) {
+    logger.error('Error while disconnecting from database', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+
+  try {
+    // Close HTTP server
+    await closeHttpServer();
+    logger.info('HTTP server closed successfully');
+    process.exit(0);
+  } catch (error) {
+    logger.error('Error while closing HTTP server', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+    process.exit(1);
+  }
+};
+
+/**
+ * Register signal handlers for graceful shutdown
+ */
+const registerSignalHandlers = () => {
+  const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];
+  
+  signals.forEach((signal) => {
+    process.once(signal, (receivedSignal) => {
+      void gracefulShutdown(receivedSignal);
+    });
+  });
+
+  logger.debug('Signal handlers registered', { signals });
+};
+
+/**
+ * Handle uncaught exceptions
+ */
+process.on('uncaughtException', (error: Error) => {
+  logger.error('Uncaught Exception - shutting down', {
+    error: error.message,
+    stack: error.stack,
+  });
+  process.exit(1);
 });
 
-// Routes
-app.get('/', (req: Request, res: Response) => {
-  res.json({ status: 'ok', message: 'Server is running' });
+/**
+ * Handle unhandled promise rejections
+ */
+process.on('unhandledRejection', (reason: any) => {
+  logger.error('Unhandled Promise Rejection - shutting down', {
+    reason: reason instanceof Error ? reason.message : String(reason),
+  });
+  process.exit(1);
 });
 
-// Auth routes
-app.use('/api/auth', authRoutes);
+/**
+ * Start the server
+ */
+const startServer = async () => {
+  try {
+    logger.info('Starting server...', {
+      environment: config.nodeEnv,
+      version: config.metadata.version,
+    });
 
+    // Connect to database
+    const { db } = await connectToDatabase(config.database);
+    logger.info('Connected to MongoDB', { database: db.databaseName });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+    // Create Express app
+    const app = createApp(config);
 
-export default app;
+    // Start HTTP server
+    httpServer = app.listen(config.port, config.host, () => {
+      logger.info(`Server listening on http://${config.host}:${config.port}`, {
+        environment: config.nodeEnv,
+        pid: process.pid,
+      });
+    });
+
+    // Register graceful shutdown handlers
+    registerSignalHandlers();
+  } catch (error) {
+    logger.error('Failed to start server', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    process.exit(1);
+  }
+};
+
+// Start the server
+startServer();

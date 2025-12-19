@@ -1,15 +1,17 @@
-# Backend Dockerfile
 FROM node:20-alpine
 
-WORKDIR /app
 
-# Install dependencies
+WORKDIR /app
+ENV NODE_ENV=development
+
 COPY package*.json ./
 RUN npm install
 
-# Copy source code (will be overridden by volume in dev)
-COPY . .
+COPY tsconfig.json ./
+COPY src ./src
+COPY pdfs ./pdfs
+COPY .env.development .env
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start:dev"]
