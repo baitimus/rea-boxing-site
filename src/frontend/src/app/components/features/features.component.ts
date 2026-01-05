@@ -9,21 +9,54 @@ import { CommonModule } from '@angular/common';
   styleUrl: './features.component.css'
 })
 export class FeaturesComponent {
-  features = [
+  trainings = [
     {
-      title: 'Geist-Körper-Verbindung',
-      description: 'Erlebe die tiefe Verbindung zwischen körperlicher Bewegung und mentaler Klarheit durch geführte therapeutische Box-Sitzungen.',
-      icon: 'brain'
+      type: 'Personal Training',
+      tagline: 'Individuell & Intensiv',
+      description: 'Deine persönliche Transformation mit massgeschneidertem Coaching.',
+      duration: '60 Minuten',
+      price: 'Ab CHF 120',
+      whoFor: 'Für alle, die maximale Aufmerksamkeit und individuelles Coaching suchen',
+      includes: [
+        'Persönlicher Trainingsplan',
+        'Eins-zu-eins Betreuung',
+        'Flexible Terminplanung',
+        'Fokus auf deine Ziele'
+      ],
+      image: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&h=400&fit=crop&q=80',
+      highlight: true
     },
     {
-      title: 'Wissenschaftlich Fundiert',
-      description: 'Unser Ansatz kombiniert moderne Neurowissenschaft mit bewährten Box-Techniken für optimales mentales Wohlbefinden.',
-      icon: 'flask'
+      type: 'Gruppentraining',
+      tagline: 'Gemeinsam Stark',
+      description: 'Energie und Motivation in einer kleinen, unterstützenden Gruppe.',
+      duration: '90 Minuten',
+      price: 'Ab CHF 45',
+      whoFor: 'Für alle, die die Energie einer Gruppe schätzen und neue Leute kennenlernen möchten',
+      includes: [
+        'Max. 8 Teilnehmer',
+        'Strukturiertes Programm',
+        'Community-Feeling',
+        'Regelmässige Kurse'
+      ],
+      image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&h=400&fit=crop&q=80',
+      highlight: false
     },
     {
-      title: 'Natürliches Refugium',
-      description: 'Trainiere in einem Raum, der dich erdet – wo jedes Element die beruhigende Präsenz der Natur widerspiegelt.',
-      icon: 'leaf'
+      type: 'Workshop',
+      tagline: 'Intensiv-Erlebnis',
+      description: 'Tiefgreifende Techniken in kompakter Form für nachhaltige Veränderung.',
+      duration: '3 Stunden',
+      price: 'Ab CHF 180',
+      whoFor: 'Für alle, die tiefer eintauchen und spezifische Themen intensiv bearbeiten möchten',
+      includes: [
+        'Fokus auf ein Thema',
+        'Theorie & Praxis',
+        'Ausführliche Unterlagen',
+        'Kleine Gruppen'
+      ],
+      image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&h=400&fit=crop&q=80',
+      highlight: false
     }
   ];
 }

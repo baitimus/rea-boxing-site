@@ -1,60 +1,116 @@
-<section class="relative w-full overflow-hidden bg-bg-muted px-6 py-24 md:px-12 md:py-32">
-  <div class="mx-auto max-w-7xl">
-    
-    <!-- Section Header -->
-    <div class="mb-16 text-center md:mb-20">
-      <h2 class="font-serif text-4xl font-bold leading-tight md:text-6xl">
-        Heilung durch <span class="italic text-accent">Bewegung</span>
-      </h2>
-      <p class="mx-auto mt-6 max-w-2xl text-lg text-text-muted md:text-xl">
-        Ein ganzheitlicher Ansatz, der deine Beziehung zu dir selbst transformiert – eine Sitzung nach der anderen.
-      </p>
-    </div>
+<section class="relative w-full overflow-hidden bg-bg-muted py-24 md:py-32">
+  
+  <!-- Section Header -->
+  <div class="mx-auto mb-12 max-w-7xl px-6 text-center md:mb-16 md:px-12">
+    <h2 class="font-serif text-4xl font-bold leading-tight md:text-6xl">
+      Dein <span class="italic text-accent">Training</span> Wählen
+    </h2>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-text-muted md:text-xl">
+      Finde das perfekte Format für deine persönliche Reise zu mentaler Klarheit und körperlicher Stärke.
+    </p>
+  </div>
 
-    <!-- Features Grid -->
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12">
+  <!-- Horizontal Scroll Container -->
+  <div class="relative">
+    <!-- Scroll Hint (Left) -->
+    <div class="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-bg-muted to-transparent md:w-24"></div>
+    
+    <!-- Scrollable Cards -->
+    <div class="flex gap-6 overflow-x-auto px-6 pb-8 md:gap-8 md:px-12 lg:justify-center" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-padding: 0 48px;">
       
-      @for (feature of features; track feature.title; let i = $index) {
+      @for (training of trainings; track training.type) {
         <div 
-          class="group relative flex flex-col items-start gap-6 rounded-3xl bg-bg-surface p-8 shadow-soft transition-all duration-500 hover:-translate-y-2 hover:shadow-soft-lg md:p-10"
-          [class.md:translate-y-12]="i === 1"
+          class="group relative flex min-w-[85vw] flex-shrink-0 flex-col overflow-hidden rounded-3xl bg-bg-surface shadow-soft transition-all duration-500 hover:-translate-y-2 hover:shadow-soft-lg sm:min-w-[420px] md:min-w-[450px] lg:min-w-[420px]"
+          [class.ring-2]="training.highlight"
+          [class.ring-accent]="training.highlight"
+          style="scroll-snap-align: center;"
         >
           
-          <!-- Icon -->
-          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10 transition-all duration-500 group-hover:scale-110 group-hover:bg-accent/20">
-            @if (feature.icon === 'brain') {
-              <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-              </svg>
-            }
-            @if (feature.icon === 'flask') {
-              <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-              </svg>
-            }
-            @if (feature.icon === 'leaf') {
-              <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.893 13.393l-1.135-1.135a2.252 2.252 0 01-.421-.585l-1.08-2.16a.414.414 0 00-.663-.107.827.827 0 01-.812.21l-1.273-.363a.89.89 0 00-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 01-1.81 1.025 1.055 1.055 0 01-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 01-1.383-2.46l.007-.042a2.25 2.25 0 01.29-.787l.09-.15a2.25 2.25 0 012.37-1.048l1.178.236a1.125 1.125 0 001.302-.795l.208-.73a1.125 1.125 0 00-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 01-1.591.659h-.18c-.249 0-.487.1-.662.274a.931.931 0 01-1.458-1.137l1.411-2.353a2.25 2.25 0 00.286-.76m11.928 9.869A9 9 0 008.965 3.525m11.928 9.868A9 9 0 118.965 3.525" />
-              </svg>
-            }
+          <!-- Highlight Badge -->
+          @if (training.highlight) {
+            <div class="absolute right-4 top-4 z-10 rounded-full bg-primary px-4 py-2 text-xs font-medium uppercase tracking-wider text-white shadow-soft-md">
+              Beliebt
+            </div>
+          }
+
+          <!-- Image -->
+          <div class="relative h-64 w-full overflow-hidden md:h-72">
+            <img 
+              [src]="training.image" 
+              [alt]="training.type" 
+              class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
           </div>
 
           <!-- Content -->
-          <div class="flex flex-col gap-3">
-            <h3 class="font-serif text-2xl font-bold text-primary md:text-3xl">
-              {{ feature.title }}
-            </h3>
+          <div class="flex flex-col gap-6 p-8">
+            
+            <!-- Header -->
+            <div class="flex flex-col gap-2">
+              <h3 class="font-serif text-3xl font-bold text-primary">
+                {{ training.type }}
+              </h3>
+              <p class="text-sm font-medium uppercase tracking-wider text-accent">
+                {{ training.tagline }}
+              </p>
+            </div>
+
+            <!-- Description -->
             <p class="leading-relaxed text-text-muted">
-              {{ feature.description }}
+              {{ training.description }}
             </p>
+
+            <!-- Price & Duration -->
+            <div class="flex items-baseline gap-3 border-y border-border py-4">
+              <span class="font-serif text-4xl font-bold text-primary">{{ training.price }}</span>
+              <span class="text-sm text-text-muted">/ {{ training.duration }}</span>
+            </div>
+
+            <!-- Who For -->
+            <div class="flex flex-col gap-2">
+              <h4 class="text-sm font-medium uppercase tracking-wider text-accent">Für Wen?</h4>
+              <p class="text-sm leading-relaxed text-text-muted">
+                {{ training.whoFor }}
+              </p>
+            </div>
+
+            <!-- Includes -->
+            <div class="flex flex-col gap-3">
+              <h4 class="text-sm font-medium uppercase tracking-wider text-accent">Inklusive</h4>
+              <ul class="flex flex-col gap-2">
+                @for (item of training.includes; track item) {
+                  <li class="flex items-start gap-2 text-sm text-text-muted">
+                    <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    {{ item }}
+                  </li>
+                }
+              </ul>
+            </div>
+
+            <!-- CTA Button -->
+            <button class="mt-auto inline-flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-hover hover:shadow-soft-md">
+              Jetzt Buchen
+            </button>
+
           </div>
 
-          <!-- Decorative Line -->
-          <div class="mt-auto h-px w-16 bg-accent/30 transition-all duration-500 group-hover:w-24 group-hover:bg-accent"></div>
         </div>
       }
 
     </div>
 
+    <!-- Scroll Hint (Right) -->
+    <div class="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-bg-muted to-transparent md:w-24"></div>
   </div>
+
+  <!-- Scroll Indicator -->
+  <div class="mt-8 flex justify-center gap-2">
+    @for (training of trainings; track training.type; let i = $index) {
+      <div class="h-2 w-2 rounded-full bg-accent/30"></div>
+    }
+  </div>
+
 </section>
