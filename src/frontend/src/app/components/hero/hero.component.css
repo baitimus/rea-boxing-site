@@ -95,9 +95,35 @@
   max-width: 700px;
   line-height: 1.6;
   letter-spacing: 0.02em;
-  margin: 0;
+  margin: 0 0 2.5rem 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   opacity: 0.95;
+}
+
+/* CTA Button */
+.hero-cta-button {
+  display: inline-block;
+  padding: 1rem 3rem;
+  background-color: var(--color-accent-teal);
+  color: var(--color-primary-navy);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 201, 240, 0.3);
+  letter-spacing: 0.02em;
+}
+
+.hero-cta-button:hover {
+  background-color: var(--color-accent-teal-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(76, 201, 240, 0.4);
+}
+
+.hero-cta-button:active {
+  transform: translateY(-1px);
 }
 
 /* Responsive Design */
@@ -113,10 +139,16 @@
   .hero-subtitle {
     font-size: 1.25rem;
     padding: 0 1rem;
+    margin-bottom: 2rem;
   }
 
   .hero-logo-container {
     margin-bottom: 2rem;
+  }
+
+  .hero-cta-button {
+    font-size: 1rem;
+    padding: 0.875rem 2.5rem;
   }
 }
 
@@ -131,5 +163,11 @@
 
   .hero-subtitle {
     font-size: 1.125rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .hero-cta-button {
+    font-size: 0.95rem;
+    padding: 0.75rem 2rem;
   }
 }
