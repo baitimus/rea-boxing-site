@@ -60,6 +60,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "allowedHosts": ["mind-movment.absent.one", ".absent.one"]
+          },
           "configurations": {
             "production": {
               "buildTarget": "frontend:build:production"
