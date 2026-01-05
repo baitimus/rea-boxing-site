@@ -1,0 +1,10 @@
+/* Calendly widget customization */
+.calendly-inline-widget {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Override Calendly's default styles to match our design */
+:host ::ng-deep .calendly-inline-widget iframe {
+  border-radius: 1.5rem;
+}
