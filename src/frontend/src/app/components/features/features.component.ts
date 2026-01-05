@@ -11,18 +11,18 @@ import { CommonModule } from '@angular/common';
 export class FeaturesComponent {
   features = [
     {
-      title: 'Mind-Body Connection',
-      description: 'Experience the profound link between physical movement and mental clarity through guided therapeutic boxing sessions.',
+      title: 'Geist-Körper-Verbindung',
+      description: 'Erlebe die tiefe Verbindung zwischen körperlicher Bewegung und mentaler Klarheit durch geführte therapeutische Box-Sitzungen.',
       icon: 'brain'
     },
     {
-      title: 'Science-Backed Methods',
-      description: 'Our approach combines modern neuroscience with time-tested boxing techniques for optimal mental wellness.',
+      title: 'Wissenschaftlich Fundiert',
+      description: 'Unser Ansatz kombiniert moderne Neurowissenschaft mit bewährten Box-Techniken für optimales mentales Wohlbefinden.',
       icon: 'flask'
     },
     {
-      title: 'Natural Sanctuary',
-      description: 'Train in a space designed to ground you—where every element reflects the calming presence of nature.',
+      title: 'Natürliches Refugium',
+      description: 'Trainiere in einem Raum, der dich erdet – wo jedes Element die beruhigende Präsenz der Natur widerspiegelt.',
       icon: 'leaf'
     }
   ];

@@ -12,23 +12,23 @@ export class StatsComponent {
   stats = [
     {
       value: '500+',
-      label: 'Sessions Guided',
-      description: 'Therapeutic journeys completed'
+      label: 'Trainings',
+      description: 'Therapeutische Sitzungen durchgeführt'
     },
     {
       value: '95%',
-      label: 'Feel Better',
-      description: 'Report improved mental clarity'
+      label: 'Fühlen Sich Besser',
+      description: 'Berichten von verbesserter mentaler Klarheit'
     },
     {
       value: '10+',
-      label: 'Years Experience',
-      description: 'In therapeutic movement'
+      label: 'Jahre Erfahrung',
+      description: 'In therapeutischer Bewegung'
     },
     {
       value: '100%',
-      label: 'Personalized',
-      description: 'Every session tailored to you'
+      label: 'Individuell',
+      description: 'Jede Sitzung auf dich zugeschnitten'
     }
   ];
 }

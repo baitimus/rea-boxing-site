@@ -6,23 +6,23 @@
       
       <!-- Brand Column -->
       <div class="flex flex-col gap-6 md:col-span-2">
-        <h3 class="font-serif text-2xl font-bold text-primary">
-          Mind <span class="italic">Movement</span>
-        </h3>
+        <div class="flex items-center">
+          <img src="/logo.png" alt="Mind Movement Logo" class="h-12 w-auto">
+        </div>
         <p class="max-w-md text-text-muted">
-          A therapeutic boxing sanctuary in Zurich, where mental clarity meets physical strength through science-backed methods and natural wellness.
+          Ein therapeutisches Box-Refugium in Zürich, wo mentale Klarheit auf körperliche Stärke trifft – durch wissenschaftlich fundierte Methoden und natürliches Wohlbefinden.
         </p>
         <div class="flex items-center gap-4 text-sm uppercase tracking-wider text-accent">
           <span class="flex h-px w-12 bg-accent"></span>
-          Zurich, Switzerland
+          Zürich, Schweiz
         </div>
       </div>
 
       <!-- Quick Links -->
       <div class="flex flex-col gap-4">
-        <h4 class="font-serif text-lg font-bold text-primary">Quick Links</h4>
+        <h4 class="font-serif text-lg font-bold text-primary">Navigation</h4>
         <nav class="flex flex-col gap-3">
-          <a routerLink="/about" class="text-text-muted transition-colors duration-300 hover:text-primary">Über mich</a>
+          <a routerLink="/about" class="text-text-muted transition-colors duration-300 hover:text-primary">Über Uns</a>
           <a routerLink="/services" class="text-text-muted transition-colors duration-300 hover:text-primary">Angebote</a>
           <a routerLink="/contact" class="text-text-muted transition-colors duration-300 hover:text-primary">Kontakt</a>
         </nav>
@@ -30,7 +30,7 @@
 
       <!-- Contact -->
       <div class="flex flex-col gap-4">
-        <h4 class="font-serif text-lg font-bold text-primary">Connect</h4>
+        <h4 class="font-serif text-lg font-bold text-primary">Kontakt</h4>
         <div class="flex flex-col gap-3 text-text-muted">
           <a href="mailto:info@mindmovement.ch" class="transition-colors duration-300 hover:text-primary">
             info&#64;mindmovement.ch
@@ -45,10 +45,10 @@
 
     <!-- Copyright Bar -->
     <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-text-muted md:flex-row">
-      <p>&copy; {{ currentYear }} Mind Movement. Crafted with care.</p>
+      <p>&copy; {{ currentYear }} Mind Movement. Mit Sorgfalt gestaltet.</p>
       <div class="flex gap-6">
-        <a routerLink="/privacy" class="transition-colors duration-300 hover:text-primary">Privacy</a>
-        <a routerLink="/terms" class="transition-colors duration-300 hover:text-primary">Terms</a>
+        <a routerLink="/privacy" class="transition-colors duration-300 hover:text-primary">Datenschutz</a>
+        <a routerLink="/terms" class="transition-colors duration-300 hover:text-primary">AGB</a>
       </div>
     </div>
 
