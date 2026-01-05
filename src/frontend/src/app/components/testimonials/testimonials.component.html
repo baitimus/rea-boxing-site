@@ -1,0 +1,71 @@
+<section class="relative w-full overflow-hidden bg-bg-muted px-4 py-16 md:px-12 md:py-24">
+  <div class="mx-auto max-w-7xl">
+    
+    <!-- Section Header -->
+    <div class="mb-12 text-center md:mb-16">
+      <h2 class="font-serif text-3xl font-bold text-primary md:text-5xl">
+        Was unsere <span class="italic text-accent">Kunden</span> sagen
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-base text-text-muted md:text-lg">
+        Echte Erfahrungen von Menschen auf ihrer Reise zu innerer Stärke
+      </p>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+      
+      @for (testimonial of testimonials; track testimonial.name) {
+        <div class="group flex flex-col gap-6 rounded-3xl bg-bg-surface p-6 shadow-soft transition-all duration-500 hover:-translate-y-1 hover:shadow-soft-lg md:p-8">
+          
+          <!-- Quote Icon -->
+          <svg class="h-10 w-10 text-accent/20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+          </svg>
+
+          <!-- Testimonial Text -->
+          <p class="text-base leading-relaxed text-text-muted md:text-lg">
+            {{ testimonial.text }}
+          </p>
+
+          <!-- Rating Stars -->
+          <div class="flex gap-1">
+            @for (star of [1,2,3,4,5]; track star) {
+              <svg class="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            }
+          </div>
+
+          <!-- Customer Info -->
+          <div class="flex items-center gap-4 border-t border-border pt-6">
+            <img 
+              [src]="testimonial.image" 
+              [alt]="testimonial.name"
+              class="h-14 w-14 rounded-full object-cover shadow-soft"
+            />
+            <div>
+              <h4 class="font-serif text-lg font-bold text-primary">
+                {{ testimonial.name }}
+              </h4>
+              <p class="text-sm text-text-muted">
+                {{ testimonial.role }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+      }
+
+    </div>
+
+    <!-- Trust Badge -->
+    <div class="mt-12 flex flex-col items-center gap-4 md:mt-16">
+      <div class="flex items-center gap-3">
+        <span class="flex h-px w-12 bg-accent/30"></span>
+        <span class="font-serif text-lg italic text-accent">Über 500+ zufriedene Kunden</span>
+        <span class="flex h-px w-12 bg-accent/30"></span>
+      </div>
+    </div>
+
+  </div>
+</section>
