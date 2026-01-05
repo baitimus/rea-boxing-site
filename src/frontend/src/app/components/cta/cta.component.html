@@ -1,36 +1,87 @@
 <section class="relative w-full overflow-hidden bg-primary px-4 py-16 md:px-12 md:py-20 lg:py-32">
-  <div class="mx-auto max-w-5xl text-center">
+  <div class="mx-auto max-w-5xl">
     
     <!-- Content -->
-    <div class="relative z-10 flex flex-col items-center gap-6 md:gap-8">
+    <div class="relative z-10 flex flex-col items-center gap-6 text-center md:gap-8">
       
       <h2 class="font-serif text-3xl font-bold leading-tight text-white md:text-5xl lg:text-6xl xl:text-7xl">
-        Bereit, deine <span class="italic text-accent-light">Reise</span> zu beginnen?
+        Unser <span class="italic text-accent-light">Standort</span>
       </h2>
       
       <p class="max-w-2xl text-base text-white/80 md:text-lg lg:text-xl">
-        Mache den ersten Schritt zu mentaler Klarheit und körperlicher Stärke. Deine Transformation beginnt mit einer einzigen Sitzung.
+        Besuchen Sie uns im Herzen von Zürich
       </p>
 
-      <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
-        <a 
-          routerLink="/contact" 
-          class="inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-8 text-xs font-medium uppercase tracking-widest text-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-soft-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary sm:w-auto sm:px-10 md:h-14 md:text-sm"
-        >
-          Sitzung Buchen
-        </a>
-        <a 
-          routerLink="/about" 
-          class="inline-flex h-12 w-full items-center justify-center rounded-full border-2 border-white bg-transparent px-8 text-xs font-medium uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary sm:w-auto sm:px-10 md:h-14 md:text-sm"
-        >
-          Mehr Erfahren
-        </a>
+      <!-- Google Maps -->
+      <div class="w-full max-w-4xl overflow-hidden rounded-3xl shadow-soft-lg">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d86926.22834698893!2d8.46180855!3d47.37738645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47900a08cc0e6e41%3A0xf5c8c7d8f8c8f8c8!2sZ%C3%BCrich%2C%20Switzerland!5e0!3m2!1sen!2s!4v1234567890"
+          width="100%" 
+          height="450" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade"
+          class="w-full">
+        </iframe>
+      </div>
+
+      <!-- Location Info Grid -->
+      <div class="grid w-full max-w-4xl gap-4 sm:grid-cols-3">
+        
+        <!-- Address -->
+        <div class="rounded-3xl bg-white/10 backdrop-blur-sm border border-white/20 p-6">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+          </div>
+          <h3 class="mb-2 font-serif text-lg font-bold text-white">Adresse</h3>
+          <p class="text-sm text-white/80">
+            Musterstrasse 123<br>
+            8000 Zürich<br>
+            Schweiz
+          </p>
+        </div>
+
+        <!-- Hours -->
+        <div class="rounded-3xl bg-white/10 backdrop-blur-sm border border-white/20 p-6">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="mb-2 font-serif text-lg font-bold text-white">Öffnungszeiten</h3>
+          <div class="space-y-1 text-sm text-white/80">
+            <p>Mo-Fr: 06:00 - 21:00</p>
+            <p>Sa: 08:00 - 18:00</p>
+            <p>So: Geschlossen</p>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="rounded-3xl bg-white/10 backdrop-blur-sm border border-white/20 p-6">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="mb-2 font-serif text-lg font-bold text-white">Kontakt</h3>
+          <div class="space-y-1 text-sm">
+            <p class="text-white/80">+41 44 999 99 99</p>
+            <a href="mailto:info@mindmovement.ch" class="text-accent-light transition-colors duration-300 hover:text-white">
+              info@mindmovement.ch
+            </a>
+          </div>
+        </div>
+
       </div>
 
       <!-- Location Badge -->
       <div class="mt-2 flex items-center gap-3 text-xs font-medium uppercase tracking-wider text-accent-light md:mt-4 md:gap-4 md:text-sm">
         <span class="flex h-px w-8 bg-accent-light md:w-12"></span>
-        Zürich
+        Zürich, Schweiz
         <span class="flex h-px w-8 bg-accent-light md:w-12"></span>
       </div>
 
