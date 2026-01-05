@@ -59,4 +59,13 @@ export class FeaturesComponent {
       highlight: false
     }
   ];
+
+  scrollToCenter(event: Event) {
+    const card = event.currentTarget as HTMLElement;
+    card.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }
 }

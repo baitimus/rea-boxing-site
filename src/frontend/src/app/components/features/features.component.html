@@ -1,26 +1,27 @@
-<section class="relative w-full overflow-hidden bg-bg-muted py-24 md:py-32">
+<section class="relative w-full overflow-hidden bg-bg-muted py-16 md:py-24 lg:py-32">
   
   <!-- Section Header -->
-  <div class="mx-auto mb-12 max-w-7xl px-6 text-center md:mb-16 md:px-12">
-    <h2 class="font-serif text-4xl font-bold leading-tight md:text-6xl">
+  <div class="mx-auto mb-8 max-w-7xl px-4 text-center md:mb-12 md:px-6 lg:mb-16 lg:px-12">
+    <h2 class="font-serif text-3xl font-bold leading-tight md:text-5xl lg:text-6xl">
       Dein <span class="italic text-accent">Training</span> Wählen
     </h2>
-    <p class="mx-auto mt-6 max-w-2xl text-lg text-text-muted md:text-xl">
+    <p class="mx-auto mt-4 max-w-2xl text-base text-text-muted md:mt-6 md:text-lg lg:text-xl">
       Finde das perfekte Format für deine persönliche Reise zu mentaler Klarheit und körperlicher Stärke.
     </p>
   </div>
 
   <!-- Horizontal Scroll Container -->
   <div class="relative">
-    <!-- Scroll Hint (Left) -->
-    <div class="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-bg-muted to-transparent md:w-24"></div>
+    <!-- Scroll Hint (Left) -->  
+    <div class="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-bg-muted to-transparent md:w-16 lg:w-24"></div>
     
     <!-- Scrollable Cards -->
-    <div class="flex gap-6 overflow-x-auto px-6 pb-8 md:gap-8 md:px-12 lg:justify-center" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-padding: 0 48px;">
+    <div class="flex gap-4 overflow-x-auto px-4 pb-6 md:gap-6 md:px-6 md:pb-8 lg:justify-center lg:gap-8 lg:px-12" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-padding: 0 16px;">
       
       @for (training of trainings; track training.type) {
         <div 
-          class="group relative flex min-w-[85vw] flex-shrink-0 flex-col overflow-hidden rounded-3xl bg-bg-surface shadow-soft transition-all duration-500 hover:-translate-y-2 hover:shadow-soft-lg sm:min-w-[420px] md:min-w-[450px] lg:min-w-[420px]"
+          (click)="scrollToCenter($event)"
+          class="group relative flex min-w-[90vw] flex-shrink-0 flex-col overflow-hidden rounded-2xl bg-bg-surface shadow-soft transition-all duration-500 hover:-translate-y-2 hover:shadow-soft-lg sm:min-w-[380px] md:min-w-[420px] md:rounded-3xl lg:min-w-[400px] cursor-pointer"
           [class.ring-2]="training.highlight"
           [class.ring-accent]="training.highlight"
           style="scroll-snap-align: center;"
@@ -28,13 +29,13 @@
           
           <!-- Highlight Badge -->
           @if (training.highlight) {
-            <div class="absolute right-4 top-4 z-10 rounded-full bg-primary px-4 py-2 text-xs font-medium uppercase tracking-wider text-white shadow-soft-md">
+            <div class="absolute right-3 top-3 z-10 rounded-full bg-primary px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-white shadow-soft-md md:right-4 md:top-4 md:px-4 md:py-2">
               Beliebt
             </div>
           }
 
           <!-- Image -->
-          <div class="relative h-64 w-full overflow-hidden md:h-72">
+          <div class="relative h-48 w-full overflow-hidden md:h-64 lg:h-72">
             <img 
               [src]="training.image" 
               [alt]="training.type" 
@@ -44,44 +45,44 @@
           </div>
 
           <!-- Content -->
-          <div class="flex flex-col gap-6 p-8">
+          <div class="flex flex-col gap-4 p-5 md:gap-6 md:p-8">
             
             <!-- Header -->
-            <div class="flex flex-col gap-2">
-              <h3 class="font-serif text-3xl font-bold text-primary">
+            <div class="flex flex-col gap-1 md:gap-2">
+              <h3 class="font-serif text-2xl font-bold text-primary md:text-3xl">
                 {{ training.type }}
               </h3>
-              <p class="text-sm font-medium uppercase tracking-wider text-accent">
+              <p class="text-xs font-medium uppercase tracking-wider text-accent md:text-sm">
                 {{ training.tagline }}
               </p>
             </div>
 
             <!-- Description -->
-            <p class="leading-relaxed text-text-muted">
+            <p class="text-sm leading-relaxed text-text-muted md:text-base">
               {{ training.description }}
             </p>
 
             <!-- Price & Duration -->
-            <div class="flex items-baseline gap-3 border-y border-border py-4">
-              <span class="font-serif text-4xl font-bold text-primary">{{ training.price }}</span>
-              <span class="text-sm text-text-muted">/ {{ training.duration }}</span>
+            <div class="flex items-baseline gap-2 border-y border-border py-3 md:gap-3 md:py-4">
+              <span class="font-serif text-3xl font-bold text-primary md:text-4xl">{{ training.price }}</span>
+              <span class="text-xs text-text-muted md:text-sm">/ {{ training.duration }}</span>
             </div>
 
             <!-- Who For -->
-            <div class="flex flex-col gap-2">
-              <h4 class="text-sm font-medium uppercase tracking-wider text-accent">Für Wen?</h4>
-              <p class="text-sm leading-relaxed text-text-muted">
+            <div class="flex flex-col gap-1.5 md:gap-2">
+              <h4 class="text-xs font-medium uppercase tracking-wider text-accent md:text-sm">Für Wen?</h4>
+              <p class="text-xs leading-relaxed text-text-muted md:text-sm">
                 {{ training.whoFor }}
               </p>
             </div>
 
             <!-- Includes -->
-            <div class="flex flex-col gap-3">
-              <h4 class="text-sm font-medium uppercase tracking-wider text-accent">Inklusive</h4>
-              <ul class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 md:gap-3">
+              <h4 class="text-xs font-medium uppercase tracking-wider text-accent md:text-sm">Inklusive</h4>
+              <ul class="flex flex-col gap-1.5 md:gap-2">
                 @for (item of training.includes; track item) {
-                  <li class="flex items-start gap-2 text-sm text-text-muted">
-                    <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li class="flex items-start gap-2 text-xs text-text-muted md:text-sm">
+                    <svg class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-accent md:h-4 md:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                     {{ item }}
@@ -91,7 +92,7 @@
             </div>
 
             <!-- CTA Button -->
-            <button class="mt-auto inline-flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-hover hover:shadow-soft-md">
+            <button class="mt-2 inline-flex h-11 w-full items-center justify-center rounded-full bg-primary text-xs font-medium uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-hover hover:shadow-soft-md md:mt-auto md:h-12 md:text-sm">
               Jetzt Buchen
             </button>
 
@@ -103,13 +104,13 @@
     </div>
 
     <!-- Scroll Hint (Right) -->
-    <div class="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-bg-muted to-transparent md:w-24"></div>
+    <div class="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-bg-muted to-transparent md:w-16 lg:w-24"></div>
   </div>
 
   <!-- Scroll Indicator -->
-  <div class="mt-8 flex justify-center gap-2">
+  <div class="mt-6 flex justify-center gap-2 md:mt-8">
     @for (training of trainings; track training.type; let i = $index) {
-      <div class="h-2 w-2 rounded-full bg-accent/30"></div>
+      <div class="h-1.5 w-1.5 rounded-full bg-accent/30 md:h-2 md:w-2"></div>
     }
   </div>
 
