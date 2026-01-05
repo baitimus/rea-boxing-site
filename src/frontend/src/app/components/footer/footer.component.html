@@ -1,0 +1,56 @@
+<footer class="w-full border-t border-border bg-bg-muted px-6 py-16 md:px-12 md:py-20">
+  <div class="mx-auto max-w-7xl">
+    
+    <!-- Footer Content Grid -->
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-8">
+      
+      <!-- Brand Column -->
+      <div class="flex flex-col gap-6 md:col-span-2">
+        <h3 class="font-serif text-2xl font-bold text-primary">
+          Mind <span class="italic">Movement</span>
+        </h3>
+        <p class="max-w-md text-text-muted">
+          A therapeutic boxing sanctuary in Zurich, where mental clarity meets physical strength through science-backed methods and natural wellness.
+        </p>
+        <div class="flex items-center gap-4 text-sm uppercase tracking-wider text-accent">
+          <span class="flex h-px w-12 bg-accent"></span>
+          Zurich, Switzerland
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="flex flex-col gap-4">
+        <h4 class="font-serif text-lg font-bold text-primary">Quick Links</h4>
+        <nav class="flex flex-col gap-3">
+          <a routerLink="/about" class="text-text-muted transition-colors duration-300 hover:text-primary">Über mich</a>
+          <a routerLink="/services" class="text-text-muted transition-colors duration-300 hover:text-primary">Angebote</a>
+          <a routerLink="/contact" class="text-text-muted transition-colors duration-300 hover:text-primary">Kontakt</a>
+        </nav>
+      </div>
+
+      <!-- Contact -->
+      <div class="flex flex-col gap-4">
+        <h4 class="font-serif text-lg font-bold text-primary">Connect</h4>
+        <div class="flex flex-col gap-3 text-text-muted">
+          <a href="mailto:info@mindmovement.ch" class="transition-colors duration-300 hover:text-primary">
+            info&#64;mindmovement.ch
+          </a>
+          <a href="tel:+41123456789" class="transition-colors duration-300 hover:text-primary">
+            +41 12 345 67 89
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-text-muted md:flex-row">
+      <p>&copy; {{ currentYear }} Mind Movement. Crafted with care.</p>
+      <div class="flex gap-6">
+        <a routerLink="/privacy" class="transition-colors duration-300 hover:text-primary">Privacy</a>
+        <a routerLink="/terms" class="transition-colors duration-300 hover:text-primary">Terms</a>
+      </div>
+    </div>
+
+  </div>
+</footer>

@@ -2,74 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500&display=swap');
-
-/* Design Tokens */
 :root {
-	/* Color Palette */
-	--color-primary-navy: #1B263B;
-	--color-primary-navy-dark: #0D131E;
-	--color-secondary-sage: #778DA9;
-	--color-secondary-sage-light: #E0E1DD;
-	--color-accent-teal: #4CC9F0;
-	--color-accent-teal-hover: #3AB0D6;
-	--color-bg-body: #F8F9FA;
-	--color-bg-surface: #FFFFFF;
-	--color-text-main: #212529;
-	--color-text-muted: #495057;
-	--color-success: #2A9D8F;
-	--color-error: #E63946;
-	
-	color-scheme: light;
+  /* Paper Grain Noise Texture */
+  --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-*,
-*::before,
-*::after {
-	box-sizing: border-box;
+@layer base {
+  body {
+    @apply bg-bg text-text font-sans antialiased selection:bg-accent selection:text-white;
+  }
+
+  /* Typography Defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold text-text;
+  }
+
+  h1 { @apply text-5xl md:text-7xl leading-tight; }
+  h2 { @apply text-4xl md:text-5xl leading-tight; }
+  h3 { @apply text-2xl md:text-3xl; }
+  
+  p { @apply leading-relaxed text-lg text-text-muted; }
 }
 
-html {
-	scrollbar-width: thin;
-	scrollbar-color: var(--color-secondary-sage) var(--color-bg-body);
-}
+@layer components {
+  /* The Grain Overlay Class - CRITICAL for tactile, paper-like feel */
+  .paper-grain {
+    @apply pointer-events-none fixed inset-0 z-50 opacity-[0.015] mix-blend-multiply;
+    background-image: var(--noise-texture);
+    background-repeat: repeat;
+  }
 
-body {
-	margin: 0;
-	min-height: 100vh;
-	background-color: var(--color-bg-body);
-	color: var(--color-text-main);
-	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-	font-size: 16px;
-	line-height: 1.6;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	overflow-x: hidden;
-}
+  /* Standard Buttons */
+  .btn-primary {
+    @apply inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-medium uppercase tracking-widest text-white transition-all duration-300 hover:bg-primary-hover hover:-translate-y-1 hover:shadow-soft-md focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+  }
 
-body::-webkit-scrollbar {
-	width: 8px;
-}
-
-body::-webkit-scrollbar-track {
-	background: var(--color-bg-body);
-}
-
-body::-webkit-scrollbar-thumb {
-	background: var(--color-secondary-sage);
-	border-radius: 4px;
-}
-
-/* Typography Base */
-h1, h2, h3, h4, h5, h6 {
-	font-family: 'Montserrat', sans-serif;
-	color: var(--color-primary-navy);
-	margin: 0;
-}
-
-/* Main Content */
-.main-content {
-	min-height: 100vh;
-	padding: 80px 0;
+  .btn-secondary {
+    @apply inline-flex h-12 items-center justify-center rounded-full border border-accent bg-transparent px-8 text-sm font-medium uppercase tracking-widest text-text transition-all duration-300 hover:bg-bg-muted hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+  }
 }
