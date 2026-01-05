@@ -1,0 +1,141 @@
+/* Header Component Styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--color-primary-navy);
+  box-shadow: 0 4px 12px rgba(27, 38, 59, 0.25);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.header-container {
+  max-width: 100%;
+  padding: 1.5rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* Logo Styles */
+.header-logo {
+  flex-shrink: 0;
+  margin-right: auto;
+}
+
+.logo-link {
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.logo-link:hover {
+  transform: translateX(-4px);
+  opacity: 0.95;
+}
+
+.logo-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Styles */
+.header-nav {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  margin-right: 2rem;
+}
+
+.nav-link {
+  font-family: 'Inter', 'Lato', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-decoration: none;
+  position: relative;
+  padding: 0.625rem 0.75rem;
+  transition: all 0.3s ease;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--color-accent-teal);
+  border-radius: 3px;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--color-accent-teal);
+  transform: translateY(-2px);
+}
+
+.nav-link:hover::before {
+  transform: scaleX(1);
+}
+
+.nav-link.active {
+  color: var(--color-accent-teal);
+  font-weight: 700;
+}
+
+/* Active state underline */
+.nav-link.active::before {
+  transform: scaleX(1);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .header-container {
+    padding: 1.25rem 2rem;
+    gap: 2rem;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+  }
+
+  .header-nav {
+    gap: 2rem;
+    margin-right: 0;
+  }
+
+  .nav-link {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+  }
+
+  .header-nav {
+    gap: 1.25rem;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.5rem;
+  }
+}
